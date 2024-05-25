@@ -50,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -63,7 +64,6 @@ import com.example.datatabledemo.routes.Screen
 import com.example.datatabledemo.util.dateFormatter
 import com.example.datatabledemo.viewmodel.SharedViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
     ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class
 )
@@ -74,6 +74,8 @@ fun HomeActivity(navController: NavHostController) {
     val viewModel = hiltViewModel<SharedViewModel>()
     val noteList = viewModel.noteListState.collectAsState()
     val selectedNotes = viewModel.selectedNotes
+    val context = LocalContext.current
+
 
 
     Scaffold(
@@ -225,7 +227,8 @@ fun HomeActivity(navController: NavHostController) {
                                                 },
                                                 onLongPress = {
                                                     hapticFeedback.performHapticFeedback(
-                                                        HapticFeedbackType.LongPress)
+                                                        HapticFeedbackType.LongPress
+                                                    )
                                                     if (selectedNotes.contains(note.id)) {
                                                         selectedNotes.remove(note.id)
                                                     } else {
@@ -234,7 +237,9 @@ fun HomeActivity(navController: NavHostController) {
                                                 }
                                             )
                                         }) {
-                                    Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
+                                    Column(modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(8.dp)) {
                                         Text(
                                             text = note.title, fontSize = 17.sp,
                                             fontWeight = FontWeight.SemiBold, color = Color.White

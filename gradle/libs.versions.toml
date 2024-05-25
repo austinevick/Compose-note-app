@@ -3,6 +3,7 @@ agp = "8.4.0"
 animation = "1.6.7"
 dataTableMaterial3 = "0.5.1"
 foundation = "1.7.0-beta01"
+hiltNavigationCompose = "1.2.0"
 kotlin = "1.9.22"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -21,6 +22,7 @@ roomVersion = "2.6.1"
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 data-table-material3 = { module = "com.seanproctor:data-table-material3", version.ref = "dataTableMaterial3" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

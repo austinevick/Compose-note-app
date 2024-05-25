@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.datatabledemo"
-        minSdk = 24
+        minSdk = 30
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -80,5 +80,5 @@ dependencies {
 
     implementation(libs.androidx.animation)
     implementation(libs.androidx.navigation.compose)
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.androidx.hilt.navigation.compose)
 }
