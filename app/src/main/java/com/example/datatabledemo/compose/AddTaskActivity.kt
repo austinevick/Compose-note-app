@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.datatabledemo.components.CustomDropdown
@@ -43,7 +44,6 @@ fun AddTask(navController: NavHostController) {
     val selectedDate = remember { mutableStateOf("") }
     val viewModel = hiltViewModel<SharedViewModel>()
     val isExpanded = remember { mutableStateOf(false) }
-    val selectedPriority = remember { mutableStateOf(Priority.LOW) }
 
     val state = viewModel.state.collectAsState()
 
@@ -70,7 +70,7 @@ fun AddTask(navController: NavHostController) {
                 actions = {
                     CustomDropdown(
                         isExpanded = isExpanded,
-                        selectedValue = selectedPriority,
+                        selectedValue = viewModel.selectedPriority,
                         list = Priority.entries
                     )
                 },
@@ -87,13 +87,13 @@ fun AddTask(navController: NavHostController) {
             LazyColumn {
                 item {
 
-
                     Text(
                         text = "Title", style = textStyle,
                         modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
                     )
                     CustomTextField(
                         value = state.value.title,
+                        textStyle = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.SemiBold),
                         onValueChange = { viewModel.onEvent(NoteEvent.SetTitle(it)) },
                         placeholder = "Enter title"
                     )

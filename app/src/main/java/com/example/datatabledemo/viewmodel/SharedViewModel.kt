@@ -1,7 +1,9 @@
 package com.example.datatabledemo.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.hapticfeedback.HapticFeedback
@@ -35,10 +37,11 @@ class SharedViewModel @Inject constructor(
     private val _noteListState = MutableStateFlow<List<NoteEntity>>(emptyList())
     val noteListState:StateFlow<List<NoteEntity>> = _noteListState.asStateFlow()
 
+    private val _selectedPriority = mutableStateOf(Priority.LOW)
+    val selectedPriority:MutableState<Priority> = _selectedPriority
+
     private val _selectedNotes = mutableStateListOf<Int>()
     val selectedNotes: SnapshotStateList<Int> = _selectedNotes
-
-
 
     init {
         viewModelScope.launch {
@@ -58,7 +61,7 @@ class SharedViewModel @Inject constructor(
             NoteEvent.SaveNote -> {
                 val title = _state.value.title
                 val desc = _state.value.description
-                val note = NoteEntity(title = title, description = desc, priority = Priority.LOW, date = Date())
+                val note = NoteEntity(title = title, description = desc, priority = _selectedPriority.value, date = Date())
                 viewModelScope.launch {
                     repository.addNote(note)
                     Log.d("note",note.toString())

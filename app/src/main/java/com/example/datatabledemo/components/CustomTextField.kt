@@ -10,10 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
 fun CustomTextField(
@@ -24,6 +24,7 @@ fun CustomTextField(
     readOnly: Boolean = false,
     maxLines:Int=1,
     singleLine: Boolean=true,
+    textStyle: TextStyle = TextStyle.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null
@@ -33,8 +34,10 @@ fun CustomTextField(
         placeholder = { Text(text = placeholder) },
         shape = RoundedCornerShape(8.dp),
         readOnly = readOnly,
-        textStyle = TextStyle(color = Color.White),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        textStyle =textStyle.copy(color = Color.White),
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences,
+            keyboardType = keyboardType),
         visualTransformation = visualTransformation,
         singleLine = singleLine, maxLines = maxLines,
         modifier = modifier.fillMaxWidth(),
