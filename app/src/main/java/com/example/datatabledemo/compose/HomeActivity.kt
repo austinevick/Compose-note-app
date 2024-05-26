@@ -34,6 +34,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -60,6 +61,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.datatabledemo.R
 import com.example.datatabledemo.calendar.CalendarActivity
+import com.example.datatabledemo.components.DeleteNoteBottomSheet
 import com.example.datatabledemo.routes.Screen
 import com.example.datatabledemo.util.dateFormatter
 import com.example.datatabledemo.viewmodel.SharedViewModel
@@ -75,6 +77,8 @@ fun HomeActivity(navController: NavHostController) {
     val noteList = viewModel.noteListState.collectAsState()
     val selectedNotes = viewModel.selectedNotes
     val context = LocalContext.current
+    val showDialog = remember { mutableStateOf(false) }
+    
 
 
 
@@ -93,7 +97,7 @@ fun HomeActivity(navController: NavHostController) {
                 },
                 actions = {
                     if (selectedNotes.isNotEmpty()) IconButton(onClick = {
-                        viewModel.onEvent(NoteEvent.DeleteNotes(selectedNotes))
+                        showDialog.value=true
                     }) {
                         Icon(Icons.Outlined.Delete, contentDescription = null)
                     }
@@ -264,6 +268,10 @@ fun HomeActivity(navController: NavHostController) {
                     }
                 }
             }
+        }
+        if (showDialog.value) DeleteNoteBottomSheet(showDialog = showDialog) {
+            viewModel.onEvent(NoteEvent.DeleteNotes(selectedNotes))
+            showDialog.value=false
         }
     }
 }
