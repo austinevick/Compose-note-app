@@ -63,24 +63,20 @@ import java.util.Date
 @Composable
 fun AddTask(navController: NavHostController) {
     val context = LocalContext.current
-    val selectedDate = remember { mutableStateOf("") }
     val viewModel = hiltViewModel<SharedViewModel>()
     val isExpanded = remember { mutableStateOf(false) }
     val showTimePicker = remember { mutableStateOf(false) }
-    val hours = remember { mutableIntStateOf(0) }
-    val minutes = remember { mutableIntStateOf(0) }
 
     val state = viewModel.state.collectAsState()
 
-    val timePickerState = rememberTimePickerState(is24Hour = true)
+    val timePickerState = rememberTimePickerState(
+        initialHour = LocalDateTime.now().hour,
+        initialMinute = LocalDateTime.now().minute,
+        is24Hour = true
+    )
 
     val alarmManager = context.getSystemService(AlarmManager::class.java)
 
-    val alarmTime = LocalDateTime.of(LocalDate.now(),LocalTime.of(hours.intValue,minutes.intValue))
-    val zoneDateTime = ZonedDateTime.of(alarmTime, ZoneId.systemDefault())
-    val startAtMillis = zoneDateTime.toInstant().toEpochMilli()
-
-    val simpleFormatter = SimpleDateFormat.getDateTimeInstance().format(Date(startAtMillis))
 
     val textStyle = TextStyle(
         color = Color.White, fontWeight = FontWeight.SemiBold
@@ -143,7 +139,7 @@ fun AddTask(navController: NavHostController) {
                     CustomTextField(
                         value = state.value.description,
                         onValueChange = { viewModel.onEvent(NoteEvent.SetDescription(it)) },
-                        maxLines = 5, singleLine = false,
+                        maxLines = 8, singleLine = false,
                         modifier = Modifier.height(150.dp),
                         placeholder = "Enter description"
                     )
@@ -155,17 +151,13 @@ fun AddTask(navController: NavHostController) {
                         )
                     )
                     CustomTextField(
-                        value = simpleFormatter,
+                        value = if (viewModel.setReminder.value) viewModel.simpleFormatter else "Set reminder",
                         onValueChange = { },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = {
-//                                val intent = Intent(
-//                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-//                                    Uri.fromParts("package", context.packageName, null)
-//                                )
-                               // context.startActivity(intent)
                                 showTimePicker.value = true
+                                viewModel.setReminder.value = true
                             }) {
                                 Icon(
                                     Icons.Outlined.DateRange,
@@ -181,8 +173,8 @@ fun AddTask(navController: NavHostController) {
             if (showTimePicker.value) TimePickerDialog(
                 onDismissRequest = { showTimePicker.value = false },
                 onConfirm = {
-                    hours.intValue= timePickerState.hour
-                    minutes.intValue=timePickerState.minute
+                    viewModel.hours.intValue = timePickerState.hour
+                    viewModel.minutes.intValue = timePickerState.minute
                     showTimePicker.value = false
                 },
                 onDismiss = { showTimePicker.value = false }) {
@@ -193,7 +185,6 @@ fun AddTask(navController: NavHostController) {
                     )
                 )
             }
-
 
             Spacer(modifier = Modifier.weight(1f))
             Button(colors = ButtonDefaults.buttonColors(
@@ -210,16 +201,15 @@ fun AddTask(navController: NavHostController) {
                         putExtra("EXTRA_DESCRIPTION", viewModel.state.value.description)
                     }
 
-                    alarmManager.setExactAndAllowWhileIdle(
+                    if (viewModel.setReminder.value) alarmManager.setExactAndAllowWhileIdle(
                         AlarmManager.RTC_WAKEUP,
-                        startAtMillis,
+                        viewModel.startAtMillis,
                         PendingIntent.getBroadcast(
                             context, Date().time.hashCode(), intent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                     )
 
-                    Log.d("Time","${simpleFormatter}")
                 }) {
                 Text(text = "Add Task", color = Color.White)
             }

@@ -2,6 +2,7 @@ package com.example.datatabledemo.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.datatabledemo.database.MIGRATION_1_2
 import com.example.datatabledemo.database.NoteDatabase
 import com.example.datatabledemo.util.Constants.Companion.DATABASE_NAME
 import dagger.Module
@@ -21,7 +22,9 @@ object AppModule {
         Room.databaseBuilder(
             context,
             NoteDatabase::class.java, DATABASE_NAME
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
+            .build()
 
     @Singleton
     @Provides

@@ -12,5 +12,6 @@ data class NoteEntity(
     val title: String,
     val description: String,
     val priority: Priority,
+    val alarmDate: String? = null,
     val date: Date
 )

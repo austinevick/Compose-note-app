@@ -16,7 +16,6 @@ hiltVersion = "2.51.1"
 kspVersion = "1.9.22-1.0.17"
 navigationCompose = "2.7.7"
 roomVersion = "2.6.1"
-#androidLibrary = "8.1.4"
 
 [libraries]
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
@@ -50,4 +49,3 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
-#android-library = {id="com.android.library",version.ref="androidLibrary" }
