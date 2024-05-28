@@ -69,6 +69,17 @@ fun AddTask(navController: NavHostController) {
 
     val state = viewModel.state.collectAsState()
 
+    /// Alarm settings
+    val setReminder = remember { mutableStateOf(false) }
+    val hours =remember {  mutableIntStateOf(0)}
+    val minutes =remember { mutableIntStateOf(0)}
+     val alarmTime: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(hours.intValue,minutes.intValue))
+     val zoneDateTime: ZonedDateTime = ZonedDateTime.of(alarmTime, ZoneId.systemDefault())
+    val startAtMillis = zoneDateTime.toInstant().toEpochMilli()
+    val simpleFormatter: String = SimpleDateFormat.getDateTimeInstance().format(Date(startAtMillis))
+    val alarmTimeFormatter = SimpleDateFormat("hh:mm a").format(Date(startAtMillis))
+
+
     val timePickerState = rememberTimePickerState(
         initialHour = LocalDateTime.now().hour,
         initialMinute = LocalDateTime.now().minute,
@@ -151,13 +162,13 @@ fun AddTask(navController: NavHostController) {
                         )
                     )
                     CustomTextField(
-                        value = if (viewModel.setReminder.value) viewModel.simpleFormatter else "Set reminder",
+                        value = if (setReminder.value) simpleFormatter else "Set reminder",
                         onValueChange = { },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = {
                                 showTimePicker.value = true
-                                viewModel.setReminder.value = true
+                                setReminder.value = true
                             }) {
                                 Icon(
                                     Icons.Outlined.DateRange,
@@ -167,15 +178,15 @@ fun AddTask(navController: NavHostController) {
                         },
                         placeholder = "Set reminder"
                     )
-
                 }
             }
             if (showTimePicker.value) TimePickerDialog(
                 onDismissRequest = { showTimePicker.value = false },
                 onConfirm = {
-                    viewModel.hours.intValue = timePickerState.hour
-                    viewModel.minutes.intValue = timePickerState.minute
+                    hours.intValue = timePickerState.hour
+                        minutes.intValue = timePickerState.minute
                     showTimePicker.value = false
+                    Log.d("asd", "${hours.intValue}:${minutes.intValue}")
                 },
                 onDismiss = { showTimePicker.value = false }) {
                 TimePicker(
@@ -194,16 +205,16 @@ fun AddTask(navController: NavHostController) {
                     .width(LocalConfiguration.current.screenWidthDp.dp)
                     .height(50.dp),
                 onClick = {
-                    viewModel.onEvent(NoteEvent.SaveNote)
+                    viewModel.onEvent(NoteEvent.SaveNote, alarmTime = alarmTimeFormatter)
                     navController.popBackStack()
                     val intent = Intent(context, AlarmReceiver::class.java).apply {
                         putExtra("EXTRA_TITLE", viewModel.state.value.title)
                         putExtra("EXTRA_DESCRIPTION", viewModel.state.value.description)
                     }
 
-                    if (viewModel.setReminder.value) alarmManager.setExactAndAllowWhileIdle(
+                    if (setReminder.value) alarmManager.setExactAndAllowWhileIdle(
                         AlarmManager.RTC_WAKEUP,
-                        viewModel.startAtMillis,
+                        startAtMillis,
                         PendingIntent.getBroadcast(
                             context, Date().time.hashCode(), intent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE

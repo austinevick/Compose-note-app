@@ -1,5 +1,7 @@
 package com.example.datatabledemo.compose
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,9 +40,13 @@ import com.example.datatabledemo.components.NoteGridView
 import com.example.datatabledemo.components.NoteListView
 import com.example.datatabledemo.routes.Screen
 import com.example.datatabledemo.viewmodel.SharedViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class
 )
 @Composable
 fun HomeActivity(navController: NavHostController) {
@@ -50,6 +57,13 @@ fun HomeActivity(navController: NavHostController) {
     val selectedNotes = viewModel.selectedNotes
     val context = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
+    val permission = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
+
+    LaunchedEffect(key1 = true) {
+        if(!permission.status.isGranted){
+            permission.launchPermissionRequest()
+        }
+    }
 
 
     Scaffold(

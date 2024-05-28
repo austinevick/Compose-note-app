@@ -46,15 +46,6 @@ class SharedViewModel @Inject constructor(
     private val _selectedNotes = mutableStateListOf<Int>()
     val selectedNotes: SnapshotStateList<Int> = _selectedNotes
 
-    /// Alarm settings
-    val setReminder =  mutableStateOf(false)
-    val hours =  mutableIntStateOf(0)
-    val minutes = mutableIntStateOf(0)
-    private val alarmTime: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(hours.intValue,minutes.intValue))
-    private val zoneDateTime: ZonedDateTime = ZonedDateTime.of(alarmTime, ZoneId.systemDefault())
-    val startAtMillis = zoneDateTime.toInstant().toEpochMilli()
-    val simpleFormatter: String = SimpleDateFormat.getDateTimeInstance().format(Date(startAtMillis))
-    var alarmTimeFormatter = SimpleDateFormat("hh:mm a").format(Date(startAtMillis))
 
 
     init {
@@ -65,7 +56,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: NoteEvent){
+    fun onEvent(event: NoteEvent,alarmTime:String? = null){
         when(event){
             is NoteEvent.DeleteNote -> {
                 viewModelScope.launch {
@@ -78,7 +69,7 @@ class SharedViewModel @Inject constructor(
                 val note = NoteEntity(title = title,
                     description = desc,
                     priority = _selectedPriority.value,
-                    alarmDate =if (setReminder.value) alarmTimeFormatter else null,
+                    alarmDate =alarmTime,
                     date = Date())
                 viewModelScope.launch {
                     repository.addNote(note)
