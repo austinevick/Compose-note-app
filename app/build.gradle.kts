@@ -93,4 +93,5 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.work.runtime.ktx)
 }

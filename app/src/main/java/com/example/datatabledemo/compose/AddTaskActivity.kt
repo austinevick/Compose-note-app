@@ -41,7 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.datatabledemo.AlarmReceiver
+import com.example.datatabledemo.AlarmWorker
 import com.example.datatabledemo.components.CustomDropdown
 import com.example.datatabledemo.components.CustomTextField
 import com.example.datatabledemo.components.TimePickerDialog
@@ -57,6 +60,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.temporal.TemporalQueries.zone
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,13 +75,16 @@ fun AddTask(navController: NavHostController) {
 
     /// Alarm settings
     val setReminder = remember { mutableStateOf(false) }
-    val hours =remember {  mutableIntStateOf(0)}
-    val minutes =remember { mutableIntStateOf(0)}
-     val alarmTime: LocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(hours.intValue,minutes.intValue))
-     val zoneDateTime: ZonedDateTime = ZonedDateTime.of(alarmTime, ZoneId.systemDefault())
+    val hours = remember { mutableIntStateOf(0) }
+    val minutes = remember { mutableIntStateOf(0) }
+    val alarmTime: LocalDateTime =
+        LocalDateTime.of(LocalDate.now(), LocalTime.of(hours.intValue, minutes.intValue))
+    val zoneDateTime: ZonedDateTime = ZonedDateTime.of(alarmTime, ZoneId.systemDefault())
     val startAtMillis = zoneDateTime.toInstant().toEpochMilli()
     val simpleFormatter: String = SimpleDateFormat.getDateTimeInstance().format(Date(startAtMillis))
     val alarmTimeFormatter = SimpleDateFormat("hh:mm a").format(Date(startAtMillis))
+
+
 
 
     val timePickerState = rememberTimePickerState(
@@ -184,7 +191,7 @@ fun AddTask(navController: NavHostController) {
                 onDismissRequest = { showTimePicker.value = false },
                 onConfirm = {
                     hours.intValue = timePickerState.hour
-                        minutes.intValue = timePickerState.minute
+                    minutes.intValue = timePickerState.minute
                     showTimePicker.value = false
                     Log.d("asd", "${hours.intValue}:${minutes.intValue}")
                 },
@@ -220,7 +227,6 @@ fun AddTask(navController: NavHostController) {
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                     )
-
                 }) {
                 Text(text = "Add Task", color = Color.White)
             }

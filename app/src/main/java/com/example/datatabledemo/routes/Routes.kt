@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.datatabledemo.compose.AddTask
 import com.example.datatabledemo.compose.HomeActivity
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun Routes() {
     val navController = rememberNavController()
