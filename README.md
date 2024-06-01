@@ -6,7 +6,8 @@
 #### 3. Custom calendar
 
 ## Screenshots
-![](https://github.com/austinevick/Compose-note-app/blob/main/app/src/screenshots/Screenshot_20240601-164342.jpg)
-![](https://github.com/austinevick/Compose-note-app/blob/main/app/src/screenshots/Screenshot_20240601-164412.jpg)
+<img src="https://github.com/austinevick/Compose-note-app/blob/main/app/src/screenshots/Screenshot_20240601-164342.jpg" width="380">
+
+<img src="https://github.com/austinevick/Compose-note-app/blob/main/app/src/screenshots/Screenshot_20240601-164412.jpg" width="380">
 
 
