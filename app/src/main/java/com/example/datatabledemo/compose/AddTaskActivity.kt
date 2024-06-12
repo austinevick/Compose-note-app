@@ -40,32 +40,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import com.example.datatabledemo.AlarmReceiver
-import com.example.datatabledemo.AlarmWorker
 import com.example.datatabledemo.components.CustomDropdown
 import com.example.datatabledemo.components.CustomTextField
 import com.example.datatabledemo.components.TimePickerDialog
 import com.example.datatabledemo.database.Priority
 import com.example.datatabledemo.viewmodel.SharedViewModel
 import java.text.SimpleDateFormat
-import java.time.Clock
-import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.time.temporal.TemporalQueries.zone
 import java.util.Date
-import java.util.concurrent.TimeUnit
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+class AddTaskActivity():Screen {
 @Composable
-fun AddTask(navController: NavHostController) {
+    override fun Content() {
+val navigator = LocalNavigator.current
     val context = LocalContext.current
     val viewModel = hiltViewModel<SharedViewModel>()
     val isExpanded = remember { mutableStateOf(false) }
@@ -83,8 +79,6 @@ fun AddTask(navController: NavHostController) {
     val startAtMillis = zoneDateTime.toInstant().toEpochMilli()
     val simpleFormatter: String = SimpleDateFormat.getDateTimeInstance().format(Date(startAtMillis))
     val alarmTimeFormatter = SimpleDateFormat("hh:mm a").format(Date(startAtMillis))
-
-
 
 
     val timePickerState = rememberTimePickerState(
@@ -109,7 +103,7 @@ fun AddTask(navController: NavHostController) {
                 navigationIconContentColor = Color.White
             ),
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navigator?.pop() }) {
                         Icon(
                             Icons.AutoMirrored.Default.KeyboardArrowLeft,
                             contentDescription = null
@@ -213,7 +207,7 @@ fun AddTask(navController: NavHostController) {
                     .height(50.dp),
                 onClick = {
                     viewModel.onEvent(NoteEvent.SaveNote, alarmTime = alarmTimeFormatter)
-                    navController.popBackStack()
+                    navigator?.pop()
                     val intent = Intent(context, AlarmReceiver::class.java).apply {
                         putExtra("EXTRA_TITLE", viewModel.state.value.title)
                         putExtra("EXTRA_DESCRIPTION", viewModel.state.value.description)
@@ -234,5 +228,5 @@ fun AddTask(navController: NavHostController) {
 
         }
     }
-
+}
 }

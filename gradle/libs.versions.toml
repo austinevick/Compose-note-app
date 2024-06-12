@@ -17,6 +17,8 @@ hiltVersion = "2.51.1"
 kspVersion = "1.9.22-1.0.17"
 navigationCompose = "2.7.7"
 roomVersion = "2.6.1"
+voyagerNavigator = "1.0.0"
+voyagerTransitions = "1.0.0"
 workRuntimeKtx = "2.9.0"
 
 [libraries]
@@ -47,6 +49,8 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.r
 
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
 room-compiler = {group="androidx.room",name="room-compiler",version.ref="roomVersion"}
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyagerNavigator" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyagerTransitions" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

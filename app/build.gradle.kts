@@ -72,6 +72,9 @@ dependencies {
 
     implementation(libs.data.table.material3)
 
+    implementation(libs.voyager.navigator)
+    implementation(libs.voyager.transitions)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -1,6 +1,5 @@
 package com.example.datatabledemo
 
-import android.icu.util.TimeUnit
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -24,12 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import com.example.datatabledemo.routes.Routes
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
+import com.example.datatabledemo.compose.HomeActivity
 import com.example.datatabledemo.ui.theme.DataTableDemoTheme
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Duration
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -42,10 +40,11 @@ class MainActivity : ComponentActivity() {
                 scrim = Color(0xff212121).toArgb()
             )
         )
-
         setContent {
             DataTableDemoTheme(darkTheme = true) {
-                Routes()
+                Navigator(HomeActivity()){
+                    SlideTransition(navigator = it)
+                }
 
             }
         }
