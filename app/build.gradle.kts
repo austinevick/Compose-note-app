@@ -10,11 +10,11 @@ ksp {
 }
 
 android {
-    namespace = "com.example.datatabledemo"
+    namespace = "com.example.reminderapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.datatabledemo"
+        applicationId = "com.example.reminderapp"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
